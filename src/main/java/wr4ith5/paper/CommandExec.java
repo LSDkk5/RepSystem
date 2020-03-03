@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.regex.Pattern;
 
 public class CommandExec implements CommandExecutor {
@@ -29,10 +30,15 @@ public class CommandExec implements CommandExecutor {
 
             if(label.equals("rep+")){
                 if(args.length == 1){
+
                     Player target = Bukkit.getPlayer(args[0]);
 
                     if(target != null && target.isOnline()){
-                        RepSystemController.AddPlus(target, sender);
+                        if(!(((Player)sender).getUniqueId().equals(target.getUniqueId()))){
+                            RepSystemController.AddPlus(target, sender);
+                        }else{
+                            sender.sendMessage("§cCan't add +/- for oneself");
+                        }
                     }else{
                         sender.sendMessage(targetIsNotOnline);
                     }
@@ -54,7 +60,11 @@ public class CommandExec implements CommandExecutor {
                                 int repValue = Integer.parseInt(args[1]);
 
                                 try{
-                                    AddDataToDatabase.fromAdmin(target, repValue);
+                                    Statement setRep = RepSystem.connection.createStatement();
+
+                                    setRep.executeUpdate("UPDATE rep SET rep_value = '"+ repValue +"' WHERE uuid = '" + target.getUniqueId() + "'");
+
+                                    setRep.close();
                                 }catch(SQLException e){
                                     e.printStackTrace();
                                 }
@@ -74,20 +84,26 @@ public class CommandExec implements CommandExecutor {
 
             if(label.equals("rep-")){
                 if(args.length == 1){
+
                     Player target = Bukkit.getPlayer(args[0]);
 
-                    if(target != null && target.isOnline()){
-                        RepSystemController.AddMinus(target, sender);
-                    }else{
-                        sender.sendMessage(targetIsNotOnline);
-                    }
+                        if(target != null && target.isOnline()){
+                            if(!(((Player)sender).getUniqueId().equals(target.getUniqueId()))){
+                                RepSystemController.AddMinus(target, sender);
+                            }else{
+                                sender.sendMessage("§cCan't add +/- for oneself");
+                            }
+                        }else{
+                            sender.sendMessage(targetIsNotOnline);
+                        }
                 }else{
                     sender.sendMessage("§cBad command usage: example §6/rep- <player_nickname>");
                 }
             }
 
             if(label.equals("rep?")){
-                if(args.length == 1){
+                    if(args.length == 1){
+
                     Player target = Bukkit.getPlayer(args[0]);
 
                     if(target != null && target.isOnline()){
@@ -99,7 +115,9 @@ public class CommandExec implements CommandExecutor {
                     sender.sendMessage("§cBad command usage: example /rep? <player_nickname>");
                 }
             }
+        }else{
+            return false;
         }
-        return false;
+        return true;
     }
 }

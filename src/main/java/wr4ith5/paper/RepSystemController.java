@@ -3,6 +3,7 @@ package wr4ith5.paper;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +30,21 @@ public class RepSystemController{
 
             if(currentDateTime.isAfter(whenCanAdd)){
                 if(PlayerExist){
-                    AddDataToDatabase.fromAddPlus(targetPlayer, sender, currentRepValue);
+
+                    Statement addPlusStatement = RepSystem.connection.createStatement();
+
+                    Bukkit.getScheduler().runTaskLater(JavaPlugin.getProvidingPlugin(RepSystem.class), () ->{
+                        try{
+                            addPlusStatement.executeUpdate("UPDATE rep SET rep_value = '" + (currentRepValue+1) + "' WHERE uuid = '" + (targetPlayer.getUniqueId()) + "'");
+                            addPlusStatement.executeUpdate("UPDATE rep SET when_can_add = '" + (LocalDateTime.now().plusHours(12)) + "' WHERE uuid = '" + ((Player) sender).getUniqueId() + "'");
+                            Bukkit.broadcastMessage("§7[§a+§7] " + sender.getName() + " §6> §7"+targetPlayer.getName());;
+
+                            addPlusStatement.close();
+                        }catch(SQLException e){
+                            RepSystem.log.warning("[RepS] Error occurred while processing your request");
+                            RepSystem.log.warning(e.toString());
+                        }
+                    }, 30);
                 }
             }else{
                 sender.sendMessage(limitReached);
@@ -62,7 +77,23 @@ public class RepSystemController{
 
             if(currentDateTime.isAfter(whenCanAdd)){
                 if(PlayerExist){
-                    AddDataToDatabase.fromAddMinus(targetPlayer, sender, currentRepValue);
+
+                    Statement addMinusStatement = RepSystem.connection.createStatement();
+
+                    Bukkit.getScheduler().runTaskLater(JavaPlugin.getProvidingPlugin(RepSystem.class), () ->{
+                        try{
+
+                            addMinusStatement.executeUpdate("UPDATE rep SET rep_value = '" + (currentRepValue-1) + "' WHERE uuid = '" + (targetPlayer.getUniqueId()) + "'");
+                            addMinusStatement.executeUpdate("UPDATE rep SET when_can_add = '" + (LocalDateTime.now().plusHours(12)) + "' WHERE uuid = '" + ((Player) sender).getUniqueId() + "'");
+                            Bukkit.broadcastMessage("§7[§c-§7] " + sender.getName() + " §6> §7 "+targetPlayer.getName());
+
+                            addMinusStatement.close();
+
+                        }catch(SQLException e){
+                            RepSystem.log.warning("[RepS] Error occurred while processing your request");
+                            RepSystem.log.warning(e.toString());
+                        }
+                    }, 30);
                 }
             }else{
                 sender.sendMessage(limitReached);
@@ -91,16 +122,17 @@ public class RepSystemController{
 
             if(PlayerExist){
                 if(currentRepValue<0){
-                    Bukkit.broadcastMessage("§7[§c" + currentRepValue +"§7] " + targetPlayer.getName());
+                    sender.sendMessage("§7[§c" + currentRepValue +"§7] " + targetPlayer.getName());
                 }else{
-                    Bukkit.broadcastMessage("§7[§a" + currentRepValue +"§7] " + targetPlayer.getName());
+                    sender.sendMessage("§7[§a" + currentRepValue +"§7] " + targetPlayer.getName());
                 }
             }
 
             checkRepStatement.close();
 
         }catch(SQLException e){
-            return;
+            RepSystem.log.warning("[RepS] Error occurred while processing your request");
+            RepSystem.log.warning(e.toString());
         }
     }
 }

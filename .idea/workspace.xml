@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4dd53933-8f2b-42c3-82be-1e83588d2751" name="Default Changelist" comment="" />
+    <list default="true" id="4dd53933-8f2b-42c3-82be-1e83588d2751" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/RepSystem_jar/RepSystem.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/wr4ith5/paper/AddDataToDatabase.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/wr4ith5/paper/CommandExec.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/wr4ith5/paper/CommandExec.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/wr4ith5/paper/RepSystemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/wr4ith5/paper/RepSystemController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/wr4ith5/paper/AddDataToDatabase.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/wr4ith5/paper/CommandExec.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/wr4ith5/paper/CommandExec.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/wr4ith5/paper/RepSystemController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/wr4ith5/paper/RepSystemController.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,6 +23,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MavenImportPreferences">
     <option name="importingSettings">
       <MavenImportingSettings>
@@ -23,6 +35,7 @@
     </option>
   </component>
   <component name="ProjectId" id="1YWf9IWXwBfjP4KZB4pfI4CB0d1" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showExcludedFiles" value="true" />
@@ -30,6 +43,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$/Desktop/jackson-core-2.10.3.jar!/" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -110,9 +124,9 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="65" y="39" key="new project wizard/0.0.1366.738@0.0.1366.738" timestamp="1583092240217" />
-    <state x="346" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1583256898180">
+    <state x="346" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1583334907317">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="346" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738@0.0.1366.738" timestamp="1583256898180" />
+    <state x="346" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738@0.0.1366.738" timestamp="1583334907317" />
   </component>
 </project>

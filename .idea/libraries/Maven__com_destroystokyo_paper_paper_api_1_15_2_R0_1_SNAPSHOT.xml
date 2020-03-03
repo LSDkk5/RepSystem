@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="Maven: com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/destroystokyo/paper/paper-api/1.15.2-R0.1-SNAPSHOT/paper-api-1.15.2-R0.1-20200229.235717-57.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/ormlite-core-5.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/destroystokyo/paper/paper-api/1.15.2-R0.1-SNAPSHOT/paper-api-1.15.2-R0.1-20200229.235717-57-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/destroystokyo/paper/paper-api/1.15.2-R0.1-SNAPSHOT/paper-api-1.15.2-R0.1-20200229.235717-57-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

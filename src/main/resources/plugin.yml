@@ -1,0 +1,15 @@
+name: RepSystem
+version: ${project.version}
+main: wr4ith5.paper.RepSystem
+api-version: 1.13
+authors: [wr4ith5]
+description: Players reputation system
+commands:
+  rep+:
+    description: Add positive reputation to other player
+  rep++:
+    description: Set custom reputation by admin.
+  rep-:
+    description: Add negative reputation to other player.
+  rep?:
+    description: Show player reputation.

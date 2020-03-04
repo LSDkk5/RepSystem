@@ -1,5 +1,6 @@
 package wr4ith5.paper;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,56 +15,55 @@ import java.time.LocalDateTime;
 public class EventListener implements Listener {
 
     private static void setPlayerColors(Player player, int currentRepValue){
-
         if(currentRepValue >= 95){
-            player.setPlayerListName("§2"+player.getName());
+            player.setPlayerListName(String.format("%s" + player.getName(), ChatColor.DARK_GREEN));
         }
 
         if(currentRepValue >= 50 && currentRepValue <= 94){
-            player.setPlayerListName("§a"+player.getName());
+            player.setPlayerListName(String.format("%s" + player.getName(), ChatColor.GREEN));
         }
 
         if(currentRepValue >= 15 && currentRepValue <= 49 ){
-            player.setPlayerListName("§9"+player.getName());
+            player.setPlayerListName(String.format("%s" + player.getName(), ChatColor.BLUE));
         }
 
         if(currentRepValue >= 0 && currentRepValue <= 15 ){
-            player.setPlayerListName("§7"+player.getName());
+            player.setPlayerListName(String.format("%s" + player.getName(), ChatColor.GRAY));
         }
 
         if(currentRepValue < 0 && currentRepValue >= -34 ){
-            player.setPlayerListName("§c"+player.getName());
+            player.setPlayerListName(String.format("%s" + player.getName(), ChatColor.RED));
         }
 
         if(currentRepValue <= -35 && currentRepValue >= -94 ){
-            player.setPlayerListName("§5"+player.getName());
+            player.setPlayerListName(String.format("%s" + player.getName(), ChatColor.DARK_PURPLE));
         }
 
         if(currentRepValue <= -95 ){
-            player.setPlayerListName("§4"+player.getName());
+            player.setPlayerListName(String.format("%s" + player.getName(), ChatColor.DARK_RED));;
         }
     }
 
     @EventHandler
-    public static void onPlayerBedEnter(PlayerBedEnterEvent event){
+    public void onPlayerBedEnter(PlayerBedEnterEvent event){
         Player player = event.getPlayer();
 
         try{
-            Statement insertPlayersStatement = RepSystem.connection.createStatement();
-            Statement getPlayerDataStatement = RepSystem.connection.createStatement();
+            Statement playerd = RepSystem.connection.createStatement();
+            Statement playerdata = RepSystem.connection.createStatement();
 
 
-            ResultSet result = insertPlayersStatement.executeQuery("SELECT COUNT(*) FROM rep WHERE uuid = '" + player.getUniqueId() + "'");
+            ResultSet result = playerd.executeQuery("SELECT COUNT(*) FROM rep WHERE uuid = '" + player.getName() + "'");
 
             boolean PlayerNotExist = result.getInt(1) == 0;
 
             if(!PlayerNotExist) {
-                ResultSet result1 = getPlayerDataStatement.executeQuery("SELECT rep_value FROM rep WHERE uuid = '" + player.getUniqueId() + "'");
+                ResultSet result1 = playerdata.executeQuery("SELECT rep_value FROM rep WHERE uuid = '" + player.getName() + "'");
                 setPlayerColors(event.getPlayer(), result1.getInt(1));
             }
 
-            insertPlayersStatement.close();
-            getPlayerDataStatement.close();
+            playerd.close();
+            playerdata.close();
 
         }catch(SQLException e){
             RepSystem.log.warning("[RepS] Error occurred while processing your request");
@@ -73,29 +73,29 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public static void onPlayerJoin(PlayerJoinEvent event){
+    public void onPlayerJoin(PlayerJoinEvent event){
 
         Player player = event.getPlayer();
 
         try{
-            Statement insertPlayersStatement = RepSystem.connection.createStatement();
-            Statement getPlayerDataStatement = RepSystem.connection.createStatement();
+            Statement insertplayers = RepSystem.connection.createStatement();
+            Statement playerdata = RepSystem.connection.createStatement();
 
 
-            ResultSet result = insertPlayersStatement.executeQuery("SELECT COUNT(*) FROM rep WHERE uuid = '" + player.getUniqueId() + "'");
+            ResultSet result = insertplayers.executeQuery("SELECT COUNT(*) FROM rep WHERE uuid = '" + player.getName() + "'");
 
             boolean PlayerNotExist = result.getInt(1) == 0;
             LocalDateTime date = LocalDateTime.now();
 
             if(PlayerNotExist){
-                insertPlayersStatement.executeUpdate("INSERT INTO rep(uuid, when_can_add) VALUES('" + player.getUniqueId() + "', '" + date +"');");
+                insertplayers.executeUpdate("INSERT INTO rep(uuid, when_can_add) VALUES('" + player.getName() + "', '" + date +"');");
             }else{
-                ResultSet result1 = getPlayerDataStatement.executeQuery("SELECT rep_value FROM rep WHERE uuid = '" + player.getUniqueId() + "'");
+                ResultSet result1 = playerdata.executeQuery("SELECT rep_value FROM rep WHERE uuid = '" + player.getName() + "'");
                 setPlayerColors(event.getPlayer(), result1.getInt(1));
             }
 
-            insertPlayersStatement.close();
-            getPlayerDataStatement.close();
+            insertplayers.close();
+            playerdata.close();
 
         }catch(SQLException e){
             RepSystem.log.warning("[RepS] Error occurred while processing your request");

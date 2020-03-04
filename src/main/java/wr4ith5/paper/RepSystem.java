@@ -12,9 +12,9 @@ import java.util.logging.Logger;
 public final class RepSystem extends JavaPlugin{
 
     public static Connection connection = null;
-    public static Statement createTableStatement = null;
 
     public static Logger log = Bukkit.getLogger();
+    private CommandExec cmd = new CommandExec();
 
 
     @Override
@@ -28,27 +28,27 @@ public final class RepSystem extends JavaPlugin{
 
         try{
             connection = DriverManager.getConnection("jdbc:sqlite:plugins/RepSystem/reps.db");
-            createTableStatement = connection.createStatement();
+            Statement createtable = connection.createStatement();
 
 
             log.info("[RepS] Connection to database established");
 
-            createTableStatement.executeUpdate("CREATE TABLE IF NOT EXISTS rep(" +
+            createtable.executeUpdate("CREATE TABLE IF NOT EXISTS rep(" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "uuid VARCHAR(40) NOT NULL," +
                     "rep_value VARCHAR(10) NOT NULL DEFAULT 0," +
                     "when_can_add VARCHAR(50) DEFAULT 0" +
                     ");");
-            createTableStatement.close();
+            createtable.close();
         }catch(SQLException e){
             log.warning("[RepS] Connection to database not be established");
             log.warning(e.toString());
         }
 
-        Objects.requireNonNull(this.getCommand("rep+")).setExecutor(new CommandExec());
-        Objects.requireNonNull(this.getCommand("rep++")).setExecutor(new CommandExec());
-        Objects.requireNonNull(this.getCommand("rep-")).setExecutor(new CommandExec());
-        Objects.requireNonNull(this.getCommand("rep?")).setExecutor(new CommandExec());
+        Objects.requireNonNull(this.getCommand("rep+")).setExecutor(cmd);
+        Objects.requireNonNull(this.getCommand("rep++")).setExecutor(cmd);
+        Objects.requireNonNull(this.getCommand("rep-")).setExecutor(cmd);
+        Objects.requireNonNull(this.getCommand("rep?")).setExecutor(cmd);
         getServer().getPluginManager().registerEvents(new EventListener(), this);
     }
 

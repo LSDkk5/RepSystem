@@ -1,6 +1,7 @@
 package wr4ith5.paper;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,25 +9,24 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.regex.Pattern;
 
 public class CommandExec implements CommandExecutor {
+    private RepSystemController controller = new RepSystemController();
 
-    public boolean isNumeric(String strNum){
-
-        Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
-
-        if (strNum == null) {
+    public static boolean isNumeric(String s) {
+        try{
+            Integer.parseInt(s);
+        } catch (NumberFormatException nfe) {
             return false;
         }
-        return pattern.matcher(strNum).matches();
+        return true;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(sender instanceof Player){
 
-            String targetIsNotOnline = "§ctarget player must be online!";
+            String targetnotonline = String.format("%starget player must be online!", ChatColor.RED);
 
             if(label.equals("rep+")){
                 if(args.length == 1){
@@ -34,16 +34,16 @@ public class CommandExec implements CommandExecutor {
                     Player target = Bukkit.getPlayer(args[0]);
 
                     if(target != null && target.isOnline()){
-                        if(!(((Player)sender).getUniqueId().equals(target.getUniqueId()))){
-                            RepSystemController.AddPlus(target, sender);
+                        if(!(sender.getName().equals(target.getName()))){
+                            controller.addPlus(target, sender);
                         }else{
-                            sender.sendMessage("§cCan't add +/- for oneself");
+                            sender.sendMessage(String.format(("%sCan add +/- for oneself"), ChatColor.RED));
                         }
                     }else{
-                        sender.sendMessage(targetIsNotOnline);
+                        sender.sendMessage(targetnotonline);
                     }
                 }else{
-                    sender.sendMessage("§cBad command usage: example §6/rep+ <player_nickname>");
+                    sender.sendMessage(String.format(("%sBad command usage: example %s/rep+ <player_nickname>"), ChatColor.RED, ChatColor.GOLD));
                 }
                 return false;
             }
@@ -60,25 +60,25 @@ public class CommandExec implements CommandExecutor {
                                 int repValue = Integer.parseInt(args[1]);
 
                                 try{
-                                    Statement setRep = RepSystem.connection.createStatement();
+                                    Statement setrep = RepSystem.connection.createStatement();
 
-                                    setRep.executeUpdate("UPDATE rep SET rep_value = '"+ repValue +"' WHERE uuid = '" + target.getUniqueId() + "'");
+                                    setrep.executeUpdate("UPDATE rep SET rep_value = '"+ repValue +"' WHERE uuid = '" + target.getName() + "'");
 
-                                    setRep.close();
+                                    setrep.close();
                                 }catch(SQLException e){
                                     e.printStackTrace();
                                 }
                             }else{
-                                sender.sendMessage("§cParameter must be a number");
+                                sender.sendMessage(String.format("%sParameter must be a number", ChatColor.RED));
                             }
                         }else{
-                            sender.sendMessage(targetIsNotOnline);
+                            sender.sendMessage(targetnotonline);
                         }
                     }else{
-                        sender.sendMessage("§cBad command usage: example §6/rep++ <player_nickname>");
+                        sender.sendMessage(String.format(("%sBad command usage: example %s/rep- <player_nickname>"), ChatColor.RED, ChatColor.GOLD));
                     }
                 }else{
-                    sender.sendMessage("§cThis command is only for ops");
+                    sender.sendMessage(String.format("%sThis command is only for ops", ChatColor.RED));
                 }
             }
 
@@ -88,31 +88,31 @@ public class CommandExec implements CommandExecutor {
                     Player target = Bukkit.getPlayer(args[0]);
 
                         if(target != null && target.isOnline()){
-                            if(!(((Player)sender).getUniqueId().equals(target.getUniqueId()))){
-                                RepSystemController.AddMinus(target, sender);
+                            if(!(sender.getName().equals(target.getName()))){
+                                controller.addMinus(target, sender);
                             }else{
-                                sender.sendMessage("§cCan't add +/- for oneself");
+                                sender.sendMessage(String.format(("%sCan add +/- for oneself"), ChatColor.RED));
                             }
                         }else{
-                            sender.sendMessage(targetIsNotOnline);
+                            sender.sendMessage(targetnotonline);
                         }
                 }else{
-                    sender.sendMessage("§cBad command usage: example §6/rep- <player_nickname>");
+                    sender.sendMessage(String.format(("%sBad command usage: example %s/rep- <player_nickname>"), ChatColor.RED, ChatColor.GOLD));
                 }
             }
 
             if(label.equals("rep?")){
-                    if(args.length == 1){
+                if(args.length == 1){
 
                     Player target = Bukkit.getPlayer(args[0]);
 
                     if(target != null && target.isOnline()){
-                        RepSystemController.CheckRepValue(target, sender);
+                        controller.checkRepValue(target, sender);
                     }else{
-                        sender.sendMessage(targetIsNotOnline);
+                        sender.sendMessage(targetnotonline);
                     }
                 }else{
-                    sender.sendMessage("§cBad command usage: example /rep? <player_nickname>");
+                    sender.sendMessage(String.format(("%sBad command usage: example %s/rep? <player_nickname>"), ChatColor.RED, ChatColor.GOLD));
                 }
             }
         }else{

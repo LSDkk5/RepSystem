@@ -1,6 +1,7 @@
 package wr4ith5.paper;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,15 +13,15 @@ import java.time.LocalDateTime;
 
 public class RepSystemController{
 
-    private  static String limitReached = "§cLimit reached, wait 12hours";
+    private String limitreached = "§cLimit reached, wait 12hours";
 
-    public static void AddPlus(Player targetPlayer, CommandSender sender){
+    public void addPlus(Player targetPlayer, CommandSender sender){
         try{
-            Statement targetPlayerStatement = RepSystem.connection.createStatement();
-            Statement senderStatement = RepSystem.connection.createStatement();
+            Statement targetplayer = RepSystem.connection.createStatement();
+            Statement getsenderdata = RepSystem.connection.createStatement();
 
-            ResultSet targetPlayerResult = targetPlayerStatement.executeQuery("SELECT * FROM rep WHERE uuid = '"+targetPlayer.getUniqueId() + "'");
-            ResultSet senderResult = senderStatement.executeQuery("SELECT when_can_add FROM rep WHERE uuid = '" + ((Player) sender).getUniqueId() + "'");
+            ResultSet targetPlayerResult = targetplayer.executeQuery("SELECT * FROM rep WHERE uuid = '" + targetPlayer.getName() + "'");
+            ResultSet senderResult = getsenderdata.executeQuery("SELECT when_can_add FROM rep WHERE uuid = '" + sender.getName() + "'");
 
             boolean PlayerExist = targetPlayerResult.getInt(1) == 1;
             int currentRepValue = targetPlayerResult.getInt(3);
@@ -29,17 +30,17 @@ public class RepSystemController{
             LocalDateTime whenCanAdd = LocalDateTime.parse(senderResult.getString("when_can_add"));
 
             if(currentDateTime.isAfter(whenCanAdd)){
-                if(PlayerExist){
 
-                    Statement addPlusStatement = RepSystem.connection.createStatement();
+                if(PlayerExist){
+                    Statement addplus = RepSystem.connection.createStatement();
 
                     Bukkit.getScheduler().runTaskLater(JavaPlugin.getProvidingPlugin(RepSystem.class), () ->{
                         try{
-                            addPlusStatement.executeUpdate("UPDATE rep SET rep_value = '" + (currentRepValue+1) + "' WHERE uuid = '" + (targetPlayer.getUniqueId()) + "'");
-                            addPlusStatement.executeUpdate("UPDATE rep SET when_can_add = '" + (LocalDateTime.now().plusHours(12)) + "' WHERE uuid = '" + ((Player) sender).getUniqueId() + "'");
-                            Bukkit.broadcastMessage("§7[§a+§7] " + sender.getName() + " §6> §7"+targetPlayer.getName());;
+                            addplus.executeUpdate("UPDATE rep SET rep_value = '" + (currentRepValue+1) + "' WHERE uuid = '" + (targetPlayer.getName()) + "'");
+                            addplus.executeUpdate("UPDATE rep SET when_can_add = '" + (LocalDateTime.now().plusHours(12)) + "' WHERE uuid = '" + (sender.getName()) + "'");
+                            Bukkit.broadcastMessage(String.format("%s[%s+%s]" + sender.getName() + " %s>%s " + targetPlayer.getName(), ChatColor.GRAY, ChatColor.GREEN, ChatColor.GRAY, ChatColor.GOLD , ChatColor.GRAY));
 
-                            addPlusStatement.close();
+                            addplus.close();
                         }catch(SQLException e){
                             RepSystem.log.warning("[RepS] Error occurred while processing your request");
                             RepSystem.log.warning(e.toString());
@@ -47,11 +48,11 @@ public class RepSystemController{
                     }, 30);
                 }
             }else{
-                sender.sendMessage(limitReached);
+                sender.sendMessage(limitreached);
             }
 
-            targetPlayerStatement.close();
-            senderStatement.close();
+            targetplayer.close();
+            getsenderdata.close();
         }catch(SQLException e){
             RepSystem.log.warning("[RepS] Error occurred while processing your request");
             RepSystem.log.warning(e.toString());
@@ -60,34 +61,34 @@ public class RepSystemController{
 
     }
 
-    public static void AddMinus(Player targetPlayer, CommandSender sender){
+    public void addMinus(Player targetPlayer, CommandSender sender){
         try{
-            Statement targetPlayerStatement = RepSystem.connection.createStatement();
-            Statement senderStatement = RepSystem.connection.createStatement();
+            Statement gettargetplayer = RepSystem.connection.createStatement();
+            Statement getsenderdata = RepSystem.connection.createStatement();
 
-            ResultSet targetPlayerResult = targetPlayerStatement.executeQuery("SELECT * FROM rep WHERE uuid = '"+targetPlayer.getUniqueId() + "'");
-            ResultSet senderResult = senderStatement.executeQuery("SELECT when_can_add FROM rep WHERE uuid = '" + ((Player) sender).getUniqueId() + "'");
+            ResultSet playerresult = gettargetplayer.executeQuery("SELECT * FROM rep WHERE uuid = '" + (targetPlayer.getName()) + "'");
+            ResultSet senderresult = getsenderdata.executeQuery("SELECT when_can_add FROM rep WHERE uuid = '" + (sender.getName()) + "'");
 
-            boolean PlayerExist = targetPlayerResult.getInt(1) == 1;
-            int currentRepValue = targetPlayerResult.getInt(3);
+            boolean PlayerExist = playerresult.getInt(1) == 1;
+            int currentRepValue = playerresult.getInt(3);
 
             LocalDateTime currentDateTime = LocalDateTime.now();
-            LocalDateTime whenCanAdd = LocalDateTime.parse(senderResult.getString("when_can_add"));
+            LocalDateTime whenCanAdd = LocalDateTime.parse(senderresult.getString("when_can_add"));
 
 
             if(currentDateTime.isAfter(whenCanAdd)){
                 if(PlayerExist){
 
-                    Statement addMinusStatement = RepSystem.connection.createStatement();
+                    Statement addminus = RepSystem.connection.createStatement();
 
                     Bukkit.getScheduler().runTaskLater(JavaPlugin.getProvidingPlugin(RepSystem.class), () ->{
                         try{
 
-                            addMinusStatement.executeUpdate("UPDATE rep SET rep_value = '" + (currentRepValue-1) + "' WHERE uuid = '" + (targetPlayer.getUniqueId()) + "'");
-                            addMinusStatement.executeUpdate("UPDATE rep SET when_can_add = '" + (LocalDateTime.now().plusHours(12)) + "' WHERE uuid = '" + ((Player) sender).getUniqueId() + "'");
-                            Bukkit.broadcastMessage("§7[§c-§7] " + sender.getName() + " §6> §7 "+targetPlayer.getName());
+                            addminus.executeUpdate("UPDATE rep SET rep_value = '" + (currentRepValue-1) + "' WHERE uuid = '" + (targetPlayer.getName()) + "'");
+                            addminus.executeUpdate("UPDATE rep SET when_can_add = '" + (LocalDateTime.now().plusHours(12)) + "' WHERE uuid = '" + (sender.getName()) + "'");
+                            Bukkit.broadcastMessage(String.format("%s[%s-%s]" + sender.getName() + " %s>%s " + targetPlayer.getName(), ChatColor.GRAY, ChatColor.RED, ChatColor.GRAY, ChatColor.GOLD , ChatColor.GRAY));
 
-                            addMinusStatement.close();
+                            addminus.close();
 
                         }catch(SQLException e){
                             RepSystem.log.warning("[RepS] Error occurred while processing your request");
@@ -96,11 +97,11 @@ public class RepSystemController{
                     }, 30);
                 }
             }else{
-                sender.sendMessage(limitReached);
+                sender.sendMessage(limitreached);
             }
 
-            targetPlayerStatement.close();
-            senderStatement.close();
+            gettargetplayer.close();
+            getsenderdata.close();
         }catch(SQLException e){
             RepSystem.log.warning("[RepS] Error occurred while processing your request");
             RepSystem.log.warning(e.toString());
@@ -108,27 +109,27 @@ public class RepSystemController{
         }
     }
 
-    public static void CheckRepValue(Player targetPlayer, CommandSender sender){
+    public void checkRepValue(Player targetPlayer, CommandSender sender){
 
-        Statement checkRepStatement;
+        Statement checkrep;
 
         try{
-            checkRepStatement = RepSystem.connection.createStatement();
+            checkrep = RepSystem.connection.createStatement();
 
-            ResultSet result = checkRepStatement.executeQuery("SELECT * FROM rep WHERE uuid = '" + targetPlayer.getUniqueId() + "'");
+            ResultSet result = checkrep.executeQuery("SELECT * FROM rep WHERE uuid = '" + targetPlayer.getName() + "'");
 
             boolean PlayerExist = result.getInt(1) == 1;
-            int currentRepValue = result.getInt("rep_value");
+            int repvalue = result.getInt("rep_value");
 
             if(PlayerExist){
-                if(currentRepValue<0){
-                    sender.sendMessage("§7[§c" + currentRepValue +"§7] " + targetPlayer.getName());
+                if(repvalue<0){
+                    sender.sendMessage(String.format("%s[%s" + repvalue + "%s] " + targetPlayer.getName(), ChatColor.GRAY, ChatColor.RED, ChatColor.GRAY));
                 }else{
-                    sender.sendMessage("§7[§a" + currentRepValue +"§7] " + targetPlayer.getName());
+                    sender.sendMessage(String.format("%s[%s" + repvalue + "%s] " + targetPlayer.getName(), ChatColor.GRAY, ChatColor.GREEN, ChatColor.GRAY));
                 }
             }
 
-            checkRepStatement.close();
+            checkrep.close();
 
         }catch(SQLException e){
             RepSystem.log.warning("[RepS] Error occurred while processing your request");

@@ -6,9 +6,12 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.jar.JarEntry;
 
 public class CommandExec implements CommandExecutor {
     private RepSystemController controller = new RepSystemController();
@@ -35,7 +38,9 @@ public class CommandExec implements CommandExecutor {
 
                     if(target != null && target.isOnline()){
                         if(!(sender.getName().equals(target.getName()))){
-                            controller.addPlus(target, sender);
+                            Bukkit.getScheduler().runTaskAsynchronously(JavaPlugin.getProvidingPlugin(RepSystem.class), () ->{
+                                controller.addPlus(target, sender);
+                            });
                         }else{
                             sender.sendMessage(String.format(("%sCan add +/- for oneself"), ChatColor.RED));
                         }
@@ -89,7 +94,9 @@ public class CommandExec implements CommandExecutor {
 
                         if(target != null && target.isOnline()){
                             if(!(sender.getName().equals(target.getName()))){
-                                controller.addMinus(target, sender);
+                                Bukkit.getScheduler().runTaskAsynchronously(JavaPlugin.getProvidingPlugin(RepSystem.class), () ->{
+                                    controller.addMinus(target, sender);
+                                });
                             }else{
                                 sender.sendMessage(String.format(("%sCan add +/- for oneself"), ChatColor.RED));
                             }
@@ -107,7 +114,9 @@ public class CommandExec implements CommandExecutor {
                     Player target = Bukkit.getPlayer(args[0]);
 
                     if(target != null && target.isOnline()){
-                        controller.checkRepValue(target, sender);
+                        Bukkit.getScheduler().runTaskAsynchronously(JavaPlugin.getProvidingPlugin(RepSystem.class), () ->{
+                            controller.checkRepValue(target, sender);
+                        });
                     }else{
                         sender.sendMessage(targetnotonline);
                     }
